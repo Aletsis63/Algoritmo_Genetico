@@ -3,14 +3,14 @@ import numpy as np
 
 #PASO 1: GENERAR NUMEROS RANDOM PARA CADA CROMOSOMA
 # Número de cromosomas en la población
-num_chromosomes = 6
+num_chromosomes = 5
 # Define el rango de valores posibles para a, b, c y d (0-30 para cada uno)
 #min_value = 0
 #max_value = 30
 
-max_value_verde = int("7CFC00", 16)
-min_value_verde = int("006400", 16)
-population = np.random.randint(min_value_verde, max_value_verde + 1, size=(num_chromosomes, 4))
+max_value_verde = 0x00FF00
+min_value_verde = 0x008000
+population = np.random.randint(min_value_verde, max_value_verde + 1, size=(num_chromosomes, 5))
 
 # Generar los cromosomas con valores aleatorios para a, b, c y d
 #population = np.random.randint(min_value, max_value + 1, size=(num_chromosomes, 4))
@@ -39,7 +39,7 @@ generations = 0
 while True:
     print("f(x) = "+ str(ag.objectiveFunction()))
     #AQUI LE INDICO QUE SI ENCEUNTRA UNA QUE SEA IGUAL A 30 SE DETENGA
-    if any(ag.objectiveFunction() == 30):
+    if any(ag.objectiveFunction() == 1):
         print("Se encontró una solución satisfactoria en la generación", generations)
         break
     #Y SI NO SE ENCONTRO EN 50 GENERACIONES QUE SALGA
@@ -81,5 +81,52 @@ while True:
     print("CROMOSOMAS MUTADOS \n" + str(mutation_points[0]) )
     
     generations += 1
+    
+array = ag.cromosomas
 
+
+#-----------------------------------------------------------
+# Crear un array vacío para guardar las cadenas hexadecimales
+array_hex = np.empty(array.shape, dtype="<U7")
+
+# Recorrer el array de números enteros y convertirlos a cadenas hexadecimales
+for i in range(population.shape[0]):
+  for j in range(population.shape[1]):
+    # Convertir el número entero a una cadena hexadecimal con el prefijo "0x"
+    hexa = hex(population[i,j])
+    # Eliminar el prefijo "0x" y añadir el símbolo "#" al principio
+    #hexa = "#" + hexa[2:]
+    hexa =  hexa[2:]
+    # Rellenar con ceros a la izquierda si es necesario
+    hexa = hexa.zfill(6)
+    # Guardar la cadena hexadecimal en el array_hex
+    hexa = "#" + hexa[0:]
+    
+    array_hex[i,j] = hexa
+
+
+print("cromosomas hexadecimales \n" + str(array_hex))
+
+#-----------------------------------------------------------------esto es la salida
+
+# Crear un array vacío para guardar las cadenas hexadecimales
+array_hex = np.empty(array.shape, dtype="<U7")
+
+# Recorrer el array de números enteros y convertirlos a cadenas hexadecimales
+for i in range(array.shape[0]):
+  for j in range(array.shape[1]):
+    # Convertir el número entero a una cadena hexadecimal con el prefijo "0x"
+    hexa = hex(array[i,j])
+    # Eliminar el prefijo "0x" y añadir el símbolo "#" al principio
+    #hexa = "#" + hexa[2:]
+    hexa =  hexa[2:]
+    # Rellenar con ceros a la izquierda si es necesario
+    hexa = hexa.zfill(6)
+    # Guardar la cadena hexadecimal en el array_hex
+    hexa = "#" + hexa[0:]
+    
+    array_hex[i,j] = hexa
+
+
+print("cromosomas hexadecimales \n" + str(array_hex))
 

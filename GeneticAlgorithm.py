@@ -13,7 +13,8 @@ class AlgoritmoGenetico:
     def objectiveFunction(self):
         F_obj = np.zeros(self.cromosomas.shape[0])
         for i in range(self.cromosomas.shape[0]):
-            F_obj[i] = abs((self.cromosomas[i,0] + (self.cromosomas[i,1] * 2) + (self.cromosomas[i,2] * 3) + (self.cromosomas[i,3] * 4)) - 30)
+           #MINIMIZAR F_obj[i] = abs((self.cromosomas[i,0] + (self.cromosomas[i,1] * 2) + (self.cromosomas[i,2] * 3) + (self.cromosomas[i,3] * 4)) - 30)
+            F_obj[i] = (self.cromosomas[i,0] + (self.cromosomas[i,1] * 2) + (self.cromosomas[i,2] * 3) + (self.cromosomas[i,3] * 4)) - 30
         return F_obj
         
     #PASO 3: FUNCION FITNESS
@@ -24,7 +25,8 @@ class AlgoritmoGenetico:
         total = 0
         
         for i in range(self.cromosomas.shape[0]):
-            Fitness[i] = 1 / (1+functionResult[i])
+           #MINIMZAR Fitness[i] = 1 / (1+functionResult[i])
+            Fitness[i] = functionResult[i]
             total += Fitness[i]
                         
         return Fitness, total
@@ -205,7 +207,9 @@ class AlgoritmoGenetico:
             arrPosition = np.append(arrPosition, Rposition)
             
             #Este random es el numero por el cual se reemplazara 1 - 30
-            Rcambio = np.random.randint(1,31)
+            #Rcambio = np.random.randint(1,31)#RADNOMS DE 1 A 31
+            #RANDOMS DE COLORES VERDES HEXAS
+            Rcambio = np.random.randint(0x008000,0x00FF00)
             arrCambios = np.append(arrCambios, Rcambio)
             
             #AQUI HAGO EL INTERCAMBIO EN LA POSICION SELECCIONADA
