@@ -5,10 +5,15 @@ import numpy as np
 # Número de cromosomas en la población
 num_chromosomes = 6
 # Define el rango de valores posibles para a, b, c y d (0-30 para cada uno)
-min_value = 0
-max_value = 30
+#min_value = 0
+#max_value = 30
+
+max_value_verde = int("7CFC00", 16)
+min_value_verde = int("006400", 16)
+population = np.random.randint(min_value_verde, max_value_verde + 1, size=(num_chromosomes, 4))
+
 # Generar los cromosomas con valores aleatorios para a, b, c y d
-population = np.random.randint(min_value, max_value + 1, size=(num_chromosomes, 4))
+#population = np.random.randint(min_value, max_value + 1, size=(num_chromosomes, 4))
 
 #AQUI VA LOS DATOS ESTSTICOS DE MI ALGORITMO GENETICO
 #population = np.array([[12,5,23,8],
@@ -17,6 +22,12 @@ population = np.random.randint(min_value, max_value + 1, size=(num_chromosomes, 
    #            [20,1,10,6],
     #           [1,4,13,19],
      #          [20,5,17,1]])
+# population = np.array([[12,5,23,8,3,23,16,10,15,8],
+#                        [2,21,18,3,2,8,5,3,9,1],
+#                        [10,4,13,14,18,12,28,19,4,2],
+#                        [10,4,13,14,13,22,26,27,5,5],
+#                        [10,4,13,14,14,17,24,25,6,7],
+#                        [10,4,13,14,23,12,22,19,7,1]])
 
 # Imprimir la población inicial
 for i, chromosome in enumerate(population, 1):
@@ -30,8 +41,9 @@ while True:
     #AQUI LE INDICO QUE SI ENCEUNTRA UNA QUE SEA IGUAL A 30 SE DETENGA
     if any(ag.objectiveFunction() == 30):
         print("Se encontró una solución satisfactoria en la generación", generations)
+        break
     #Y SI NO SE ENCONTRO EN 50 GENERACIONES QUE SALGA
-    elif generations >= 4400:
+    elif generations >= 60:
         print("No se encontró una solución satisfactoria después de 50 generaciones")
         break
 

@@ -12,12 +12,8 @@ class AlgoritmoGenetico:
     #f(x) = ((a + 2b + 3c + 4d) - 30)
     def objectiveFunction(self):
         F_obj = np.zeros(self.cromosomas.shape[0])
-        F_obj[0] = abs((self.cromosomas[0,0] + (self.cromosomas[0,1] * 2) + (self.cromosomas[0,2] * 3) + (self.cromosomas[0,3] * 4)) - 30)
-        F_obj[1] = abs((self.cromosomas[1,0] + (self.cromosomas[1,1] * 2) + (self.cromosomas[1,2] * 3) + (self.cromosomas[1,3] * 4)) - 30)
-        F_obj[2] = abs((self.cromosomas[2,0] + (self.cromosomas[2,1] * 2) + (self.cromosomas[2,2] * 3) + (self.cromosomas[2,3] * 4)) - 30)
-        F_obj[3] = abs((self.cromosomas[3,0] + (self.cromosomas[3,1] * 2) + (self.cromosomas[3,2] * 3) + (self.cromosomas[3,3] * 4)) - 30)
-        F_obj[4] = abs((self.cromosomas[4,0] + (self.cromosomas[4,1] * 2) + (self.cromosomas[4,2] * 3) + (self.cromosomas[4,3] * 4)) - 30)
-        F_obj[5] = abs((self.cromosomas[5,0] + (self.cromosomas[5,1] * 2) + (self.cromosomas[5,2] * 3) + (self.cromosomas[5,3] * 4)) - 30)
+        for i in range(self.cromosomas.shape[0]):
+            F_obj[i] = abs((self.cromosomas[i,0] + (self.cromosomas[i,1] * 2) + (self.cromosomas[i,2] * 3) + (self.cromosomas[i,3] * 4)) - 30)
         return F_obj
         
     #PASO 3: FUNCION FITNESS
@@ -25,14 +21,12 @@ class AlgoritmoGenetico:
         #Fitness[1] = 1 / (1+F_obj[1]) EJEMPLO
         functionResult = self.objectiveFunction()
         Fitness = np.zeros(functionResult.shape)
-        Fitness[0] = 1 / (1+functionResult[0])
-        Fitness[1] = 1 / (1+functionResult[1])
-        Fitness[2] = 1 / (1+functionResult[2])
-        Fitness[3] = 1 / (1+functionResult[3])
-        Fitness[4] = 1 / (1+functionResult[4])
-        Fitness[5] = 1 / (1+functionResult[5])
+        total = 0
         
-        total = Fitness[0]+Fitness[1]+Fitness[2]+Fitness[3]+Fitness[4]+Fitness[5]
+        for i in range(self.cromosomas.shape[0]):
+            Fitness[i] = 1 / (1+functionResult[i])
+            total += Fitness[i]
+                        
         return Fitness, total
     
 
@@ -42,12 +36,8 @@ class AlgoritmoGenetico:
         fitness = self.fitnessFunction()[0]
         total = self.fitnessFunction()[1]
         P = np.zeros(fitness.shape)
-        P[0] = fitness[0] / total
-        P[1] = fitness[1] / total
-        P[2] = fitness[2] / total
-        P[3] = fitness[3] / total
-        P[4] = fitness[4] / total
-        P[5] = fitness[5] / total
+        for i in range(self.cromosomas.shape[0]):
+             P[i] = fitness[i] / total
         return P
 
     def probabilityComulative(self):
@@ -55,46 +45,30 @@ class AlgoritmoGenetico:
         #C[i] = 0.1254 + n
         C = np.zeros(p.shape)
         C[0] = p[0]
-        C[1] = p[0] + p[1]
-        C[2] = p[0] + p[1] + p[2]
-        C[3] = p[0] + p[1] + p[2] + p[3]
-        C[4] = p[0] + p[1] + p[2] + p[3] + p[4]
-        C[5] = p[0] + p[1] + p[2] + p[3] + p[4] + p[5]
+        for i in range(self.cromosomas.shape[0]):
+            C[i] = p[i]
+            C[i] = C[i-1] + p[i]
+        
         return C
      
 
     def comparacionesRandom(self):
         NewChromosome = np.zeros(self.cromosomas.shape)
-        self.nRandom = np.random.rand(6)
+        self.nRandom = np.random.rand(self.cromosomas.shape[0])
         #self.nRandom = np.array([[0.201],[0.284],[0.099],[0.822],[0.398],[0.501]])
 
         #for i in range(0, 6):
         for i in range(len(self.cromosomas)):
-
-            if self.nRandom[i] > self.probabilityComulative()[0] and self.nRandom[i] < self.probabilityComulative()[1]:
-                NewChromosome[i] = self.cromosomas[1]
-                print(f"NewChromosome[{i}] PosA[{2}] = [a; b; c; d] = {NewChromosome[i]}")
+            
+            for j in range(len(self.probabilityComulative()) - 1):
+             if self.nRandom[i] > self.probabilityComulative()[j] and self.nRandom[i] < self.probabilityComulative()[j+1]:
+                NewChromosome[i] = self.cromosomas[j+1]
+                print(f"NewChromosome[{i}] PosA[{j+2}] = [a; b; c; d] = {NewChromosome[i]}")
                 
-            elif self.nRandom[i] > self.probabilityComulative()[1] and self.nRandom[i] < self.probabilityComulative()[2]:
-                NewChromosome[i] = self.cromosomas[2]
-                print(f"NewChromosome[{i}] PosA[{3}] = [a; b; c; d] = {NewChromosome[i]}")
-                
-            elif self.nRandom[i] > self.probabilityComulative()[2] and self.nRandom[i] < self.probabilityComulative()[3]:
-                NewChromosome[i] = self.cromosomas[3]
-                print(f"NewChromosome[{i}] PosA[{4}] = [a; b; c; d] = {NewChromosome[i]}")
-                
-            elif self.nRandom[i] > self.probabilityComulative()[3] and self.nRandom[i] < self.probabilityComulative()[4]:
-                NewChromosome[i] = self.cromosomas[4]
-                print(f"NewChromosome[{i}] PosA[{5}] = [a; b; c; d] = {NewChromosome[i]}")
-                
-            elif self.nRandom[i] > self.probabilityComulative()[4] and self.nRandom[i] < self.probabilityComulative()[5]:
-                NewChromosome[i] = self.cromosomas[5]
-                print(f"NewChromosome[{i}] PosA[{6}] = [a; b; c; d] = {NewChromosome[i]}")
-                
-            elif self.nRandom[i] < self.probabilityComulative()[0]:
+            if self.nRandom[i] < self.probabilityComulative()[0]:
                 NewChromosome[i] = self.cromosomas[0]
                 print(f"NewChromosome[{i}] PosA[{1}] = [a; b; c; d] = {NewChromosome[i]}")
-                
+           
         # Convertir NewChromosome al tipo de datos de self.cromosomas
         NewChromosome = NewChromosome.astype(self.cromosomas.dtype)
 
@@ -108,7 +82,7 @@ class AlgoritmoGenetico:
     #EN ESTE PUNTO AHORA SIGUE LO DE SELECCIONAR NUEVOS RANDOMS PARA SACAR LA NUEVA GENERACION
     def seleccionar_padres(self):
 
-        pc = .25
+        pc = .30
         k = 0
         i = 0
         #self.nRandom = np.zeros(self.cromosomas.shape)
@@ -140,7 +114,10 @@ class AlgoritmoGenetico:
         for i in range(len(self.parentPos)):
             # se genera de 1 a cromosomas -1 que seria abcd son 4 -1 son 3, NO PONGO -1 PORQUE COMO EMPIEZA EN 1 Y LA POSICION CUENTA COMO 0 SE EQUILIBRA
            # self.crossPoint[i] = np.random.randint(1, self.cromosomas.shape[1] ) No se porque me da error pero deberia de funcionar mientras dejare estatco con 3
-           self.crossPoint[i] = np.random.randint(1, 4 ) 
+           #self.crossPoint[i] = np.random.randint(1, 4 ) 
+        #   self.crossPoint = np.random.randint(1, len(self.cromosomas[0]), size=len(self.cromosomas))
+            primer_arreglo = self.cromosomas[0]
+            self.crossPoint[i] = np.random.randint(1, primer_arreglo.shape[0])
            
             
 
@@ -150,8 +127,6 @@ class AlgoritmoGenetico:
     def crossoverPoints(self):
         pos = self.parentPos
         point = self.crossPoint
-        
-        
         
         if len(pos) <= 1:
             return
@@ -166,101 +141,32 @@ class AlgoritmoGenetico:
         #pues solo tomara 1 y los otros 3 del otro array, si son 2 pues toma 2 del primero y 2 del otro, 
         #y si sonn 3 pues toma 3 del primero y 1 del otro, PARA ESO SIRVEN LOS IFS(NOTA PERSONAL TRATAR DE IMPLEMENTARLO CON UN FOR PARA AHORRAR CODIGO)
         #primer cruce  Chromosome[1] >< Chromosome[4]
-        if len(pos) == 2:
-            pointC1 = point[0]
-            pointC2 = point[1]
         
-            
-            gen1 = self.cromosomas.item(pos[0],0)
-            if pointC1 == 1:
-                gen2 = self.cromosomas.item(pos[0+1],1)
-                gen3 = self.cromosomas.item(pos[0+1],2)
-                gen4 = self.cromosomas.item(pos[0+1],3)
-            elif pointC1 == 2:
-                gen2 = self.cromosomas.item(pos[0],1)
-                gen3 = self.cromosomas.item(pos[0+1],2)
-                gen4 = self.cromosomas.item(pos[0+1],3)
-            elif pointC1 == 3:
-                gen2 = self.cromosomas.item(pos[0],1)
-                gen3 = self.cromosomas.item(pos[0],2)
-                gen4 = self.cromosomas.item(pos[0+1],3)
-            
-            temp[pos[0]] = [gen1, gen2, gen3, gen4]
-            #self.cromosomas[pos[0]] = [gen1,gen2,gen3,gen4]
-            #segundo cruce Chromosome[4] >< Chromosome[5]
-            gen1 = self.cromosomas.item(pos[1],0)
-            if pointC2 == 1:
-                gen2 = self.cromosomas.item(pos[0],1)
-                gen3 = self.cromosomas.item(pos[0],2)
-                gen4 = self.cromosomas.item(pos[0],3)
-            elif pointC2 == 2:
-                gen2 = self.cromosomas.item(pos[1],1)
-                gen3 = self.cromosomas.item(pos[0],2)
-                gen4 = self.cromosomas.item(pos[0],3)
-            elif pointC2 == 3:
-                gen2 = self.cromosomas.item(pos[1],1)
-                gen3 = self.cromosomas.item(pos[1],2)
-                gen4 = self.cromosomas.item(pos[0],3)
-                
-            temp[pos[1]] = [gen1, gen2, gen3, gen4]
-                
-            #-------------
-        else:
-            pointC1 = point[0]
-            pointC2 = point[1]
-            pointC3 = point[2]
-            
-            gen1 = self.cromosomas.item(pos[0],0)
-            if pointC1 == 1:
-                gen2 = self.cromosomas.item(pos[0+1],1)
-                gen3 = self.cromosomas.item(pos[0+1],2)
-                gen4 = self.cromosomas.item(pos[0+1],3)
-            elif pointC1 == 2:
-                gen2 = self.cromosomas.item(pos[0],1)
-                gen3 = self.cromosomas.item(pos[0+1],2)
-                gen4 = self.cromosomas.item(pos[0+1],3)
-            elif pointC1 == 3:
-                gen2 = self.cromosomas.item(pos[0],1)
-                gen3 = self.cromosomas.item(pos[0],2)
-                gen4 = self.cromosomas.item(pos[0+1],3)
-            
-            temp[pos[0]] = [gen1, gen2, gen3, gen4]
-            #self.cromosomas[pos[0]] = [gen1,gen2,gen3,gen4]
-            #segundo cruce Chromosome[4] >< Chromosome[5]
-            gen1 = self.cromosomas.item(pos[1],0)
-            if pointC2 == 1:
-                gen2 = self.cromosomas.item(pos[1+1],1)
-                gen3 = self.cromosomas.item(pos[1+1],2)
-                gen4 = self.cromosomas.item(pos[1+1],3)
-            elif pointC2 == 2:
-                gen2 = self.cromosomas.item(pos[1],1)
-                gen3 = self.cromosomas.item(pos[1+1],2)
-                gen4 = self.cromosomas.item(pos[1+1],3)
-            elif pointC2 == 3:
-                gen2 = self.cromosomas.item(pos[1],1)
-                gen3 = self.cromosomas.item(pos[1],2)
-                gen4 = self.cromosomas.item(pos[1+1],3)
-                
-            temp[pos[1]] = [gen1, gen2, gen3, gen4]
-            #self.cromosomas[pos[1]] = [gen1,gen2,gen3,gen4]
-            
-            #tecer cruce Chromosome[5] >< Chromosome[1]
-            gen1 = self.cromosomas.item(pos[2],0)
-            if pointC3 == 1:
-                gen2 = self.cromosomas.item(pos[0],1)
-                gen3 = self.cromosomas.item(pos[0],2)
-                gen4 = self.cromosomas.item(pos[0],3)
-            elif pointC3 == 2:
-                gen2 = self.cromosomas.item(pos[2],1)
-                gen3 = self.cromosomas.item(pos[0],2)
-                gen4 = self.cromosomas.item(pos[0],3)
-            elif pointC3 == 3:
-                gen2 = self.cromosomas.item(pos[2],1)
-                gen3 = self.cromosomas.item(pos[2],2)
-                gen4 = self.cromosomas.item(pos[0],3)
-            
-            #self.cromosomas[pos[2]] = [gen1,gen2,gen3,gen4]
-            temp[pos[2]] = [gen1, gen2, gen3, gen4]
+        for i in range(len(pos)):
+            gen = np.empty(0)
+            gen = np.append(gen, self.cromosomas.item(pos[i],0))
+            punto = point
+            punto = punto.astype(int)
+            lenGen = self.cromosomas[0]
+            #j = 1
+            source = 1
+            for j in range(1,lenGen.shape[0]):# -1 porque en la ultimia posicion se va a regresar, CREO QUE AQUI LO BOY A CAMBIAR HASTA EL TAMANO DE LOS GENES OSEA ABCD
+                    if i == len(punto) - 1:#si es igual a la ultima psosicion regresa a comparar la primera
+                        if j != point[i]:
+                          gen = np.append(gen, self.cromosomas.item(pos[i],j))
+                        else:
+                          gen = np.append(gen, self.cromosomas.item(pos[0],j))
+                          
+                    elif source < point[i]:#AQUI LE TENGO QUE CAMBIAR ENTRO DENUEVO
+                        gen = np.append(gen, self.cromosomas.item(pos[i],j))
+                    else:
+                        gen = np.append(gen, self.cromosomas.item(pos[i+1],j))
+                        
+                    source += 1
+                        
+                        #SOLO ENTRO 3 VECES      
+            temp[pos[i]] = gen;   
+      
         
         #MUEVO MI ARREGLO COPIA AL PRINCIPAL PARA REFLEJAR LOS CAMBIOS
         self.cromosomas = temp
@@ -276,11 +182,15 @@ class AlgoritmoGenetico:
         #AQUI COMIENZA LO DE LA MUTACION
         #MAS ADELANTE PUEDO SACAR ESTO PARA HACER LOS PUNTOS DEPENDIENDO DE OTRA ESTRUCTURA
         #total_gen = number_of_gen_in_Chromosome * number of population
-        total_gen = 4 * 6           
+        #total_gen = 4 * 6           
+        
+        lenGen = self.cromosomas[0]
+        
+        total_gen = lenGen.shape[0] * self.cromosomas.shape[0]
         
         #Mutation process is done by generating a random integer between 1 and total_gen (1 to 24). 24 total de genes del cromosoma
         #Suppose we define ρm 10%, it is expected that 10% (0.1) of total_gen in the population that will be mutated
-        number_of_mutations = 0.1 * 24
+        number_of_mutations = 0.1 * total_gen
         #The value of mutated gens at mutation point is replaced by random number between 0-30.
 
         #------------------------------------------------------------------------
